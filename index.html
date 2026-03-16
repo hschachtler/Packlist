@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version 1.0.1 -->
+<!-- Version 1.1.0 -->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -214,33 +214,105 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
 /* ═══════════ PRINT STYLES ═══════════ */
 @media print{
-  @page{size:A4 landscape;margin:8mm 10mm}
-  html,body{height:auto;overflow:visible;background:#fff!important;color:#000!important}
-  #topbar,#pstrip,#tab-nav,.pack-toolbar,.pack-stat-bar,#pl-strip,#toast,.moverlay{display:none!important}
-  .view{display:none!important}
-  #view-packlist{display:block!important;overflow:visible!important;flex:none!important}
-  .pack-table-wrap{overflow:visible!important;padding:0!important;flex:none!important}
-  .ptable{font-size:7pt;width:100%;table-layout:auto!important}
-  .ptable th,.ptable td{border:0.5pt solid #ccc;padding:2pt 4pt}
-  .ptable th .th-inner{padding:3pt 4pt}
-  .th-name{font-size:7pt}
-  .th-wt,.td-cat,.td-wt,.ac-sub{font-size:6pt}
-  .td-item{font-size:7pt}
-  .ort-dot.assigned{width:14px;height:14px;font-size:8pt;border-radius:3px}
-  .ort-dot.unassigned{display:none}
-  .wt-row td{background:#f0f0f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .cat-row td{background:#e0e0e0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .ptable tr:nth-child(even) td{background:#fafafa!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .ort-dot.assigned{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .th-swatch{display:block;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  #print-hdr{display:block!important}
+  @page{size:A4 landscape;margin:7mm 7mm}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#000!important;display:block!important}
+  #topbar,#pstrip,#tab-nav,.pack-toolbar,.pack-stat-bar,#pl-strip,#toast,.moverlay,
+  #view-projects,#view-admin,#view-packlist{display:none!important}
+  #print-page{display:block!important}
 }
-#print-hdr{display:none;margin-bottom:4mm;font-family:'Playfair Display',serif}
-#print-hdr h2{font-size:12pt;color:#1a2b3c}
-#print-hdr p{font-size:7pt;color:#5a7a9a;margin-top:1pt}
+#print-page{display:none}
+
+/* ── Print page layout ── */
+#print-page{
+  font-family:'DM Sans',sans-serif;
+  background:#fff;
+  width:100%;
+}
+#pp-title-bar{
+  background:#1a3a5c;
+  color:#fff;
+  padding:5pt 10pt 4pt;
+  margin-bottom:3pt;
+  border-radius:4pt;
+}
+#pp-title-bar h2{
+  font-family:'Playfair Display',serif;
+  font-size:10pt;
+  font-weight:700;
+  margin:0;
+}
+#pp-title-bar p{
+  font-size:6pt;
+  color:#9ab5cc;
+  margin:1pt 0 0;
+}
+#pp-cols{
+  display:flex;
+  gap:3pt;
+  width:100%;
+  align-items:flex-start;
+}
+.pp-col{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:3pt;
+  min-width:0;
+}
+.pp-cat{
+  border:0.5pt solid #6a8aaa;
+  border-radius:3pt;
+  overflow:hidden;
+  break-inside:avoid;
+}
+.pp-cat-hdr{
+  background:#1a3a5c;
+  color:#fff;
+  font-size:6.2pt;
+  font-weight:700;
+  text-align:center;
+  padding:2.5pt 3pt;
+  font-family:'DM Sans',sans-serif;
+  letter-spacing:.02em;
+}
+.pp-item{
+  display:flex;
+  align-items:center;
+  border-top:0.3pt solid #c0ccd8;
+  padding:1.2pt 2pt 1.2pt 2pt;
+  font-size:5.4pt;
+  gap:2pt;
+}
+.pp-item.mh{background:#eef2f7}
+.pp-item.op{background:#fdf6ec}
+.pp-cb{
+  width:6pt;
+  height:6pt;
+  border:0.6pt solid #4a6680;
+  border-radius:1pt;
+  flex-shrink:0;
+}
+.pp-name{
+  flex:1;
+  font-size:5.4pt;
+  color:#1a1a1a;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.pp-tag{
+  font-size:4.8pt;
+  font-weight:700;
+  flex-shrink:0;
+  width:13pt;
+  text-align:right;
+}
+.pp-tag.mh{color:#1a3a5c}
+.pp-tag.op{color:#b8720a}
 </style>
 </head>
-<body data-version="1.0.1">
+<body data-version="1.1.0">
 
 <!-- TOPBAR -->
 <div id="topbar">
@@ -323,9 +395,18 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
   </div>
 </div>
 
+<!-- ═══ PRINT PAGE (rendered by JS, shown only @print) ═══ -->
+<div id="print-page">
+  <div id="pp-title-bar">
+    <h2 id="pp-title">Packliste</h2>
+    <p id="pp-subtitle"></p>
+  </div>
+  <div id="pp-cols"></div>
+</div>
+
 <!-- ═══ VIEW: PACKLISTE ═══ -->
 <div id="view-packlist" class="view">
-  <div id="print-hdr">
+  <div id="print-hdr" style="display:none">
     <h2 id="print-title">Packliste</h2>
     <p id="print-sub"></p>
   </div>
@@ -1012,7 +1093,68 @@ function toggleAssign(itemId, ortId){
 }
 
 function printPacklist(){
+  buildPrintPage();
   window.print();
+}
+
+// ── Build the A4-landscape category-column print layout ──────────────────
+function buildPrintPage(){
+  const proj = S.projects.find(p => p.id === (curPL.projectId || S.activeProject));
+  const items = S.items;
+
+  // Title
+  document.getElementById('pp-title').textContent = curPL.name || 'Packliste';
+  document.getElementById('pp-subtitle').textContent =
+    (proj ? proj.icon + ' ' + proj.name + '  ·  ' + (proj.year || '') : '') +
+    '  ·  MH = Must Have  ·  OP = Optional';
+
+  // Group items by category — preserve S.categories order
+  const catOrder = S.categories || [];
+  const grp = {};
+  items.forEach(it => {
+    const c = it.category || 'Sonstiges';
+    if (!grp[c]) grp[c] = [];
+    grp[c].push(it);
+  });
+  const orderedCats = [
+    ...catOrder.filter(c => grp[c]),
+    ...Object.keys(grp).filter(c => !catOrder.includes(c))
+  ];
+
+  // Build category block HTML
+  function catHTML(catName) {
+    const its = grp[catName] || [];
+    const rows = its.map(it => {
+      const cls = it.prio === 'MH' ? 'mh' : 'op';
+      return `<div class="pp-item ${cls}">
+        <div class="pp-cb"></div>
+        <span class="pp-name">${it.name}</span>
+        <span class="pp-tag ${cls}">${it.prio}</span>
+      </div>`;
+    }).join('');
+    return `<div class="pp-cat">
+      <div class="pp-cat-hdr">${catName}</div>
+      ${rows}
+    </div>`;
+  }
+
+  // Distribute categories into 5 columns by total item count (greedy bin-packing)
+  const NUM_COLS = 5;
+  const catSizes = orderedCats.map(c => ({ name: c, n: (grp[c] || []).length + 1.5 })); // +1.5 for header
+  const cols = Array.from({ length: NUM_COLS }, () => ({ cats: [], total: 0 }));
+
+  catSizes.forEach(cat => {
+    // Place into the column with least total so far
+    const minCol = cols.reduce((best, col, i) => col.total < cols[best].total ? i : best, 0);
+    cols[minCol].cats.push(cat.name);
+    cols[minCol].total += cat.n;
+  });
+
+  // Render columns
+  const ppCols = document.getElementById('pp-cols');
+  ppCols.innerHTML = cols.map(col =>
+    `<div class="pp-col">${col.cats.map(catHTML).join('')}</div>`
+  ).join('');
 }
 
 // ══════════════════════════════════
