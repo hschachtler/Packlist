@@ -406,6 +406,14 @@
     "Bekleidung",
     "Verpflegung"
   ],
-  "packlists": [],
+  "packlists": [
+    {
+      "id": "ku97zu9765mmswe722",
+      "name": "Hermann BikePacking PL Serbien 2026",
+      "projectId": "425avcw7vf2mmsuhnre",
+      "date": "16.03.2026",
+      "assignments": {}
+    }
+  ],
   "theme": "light"
 }
