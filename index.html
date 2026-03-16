@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version 1.0.3 -->
+<!-- Version 1.0.4 -->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -136,7 +136,8 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .sc.wt{background:var(--acc);color:var(--g1);border-color:var(--mhbr)}
 
 /* TABLE CONTAINER */
-.pack-table-wrap{flex:1;overflow:auto;padding:10px 12px;position:relative}
+/* padding-top:0 ist zwingend – sonst funktioniert position:sticky;top:0 auf th nicht korrekt */
+.pack-table-wrap{flex:1;overflow:auto;padding:0 12px 10px;position:relative}
 .pack-table-wrap::-webkit-scrollbar{width:6px;height:6px}
 .pack-table-wrap::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
 
@@ -268,7 +269,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 #print-hdr p{font-size:7pt;color:#5a7a9a;margin-top:1pt}
 </style>
 </head>
-<body data-version="1.0.3">
+<body data-version="1.0.4">
 
 <!-- TOPBAR -->
 <div id="topbar">
