@@ -1,0 +1,411 @@
+{
+  "activeProject": "425avcw7vf2mmsuhnre",
+  "projects": [
+    {
+      "id": "425avcw7vf2mmsuhnre",
+      "name": "Bikepacking Serbien 2026",
+      "sport": "iskxgavzdsfmmsuhnre",
+      "year": "Juni 2026",
+      "status": "active",
+      "icon": "🚴"
+    },
+    {
+      "id": "6tes63ghq2nmmsuhnre",
+      "name": "Wandern Tessin 2025",
+      "sport": "bs90w8rukc9mmsuhnre",
+      "year": "September 2025",
+      "status": "done",
+      "icon": "🥾"
+    }
+  ],
+  "sports": [
+    {
+      "id": "iskxgavzdsfmmsuhnre",
+      "name": "Bikepacking",
+      "emoji": "🚴"
+    },
+    {
+      "id": "bs90w8rukc9mmsuhnre",
+      "name": "Wandern",
+      "emoji": "🥾"
+    },
+    {
+      "id": "7wigce76kf3mmsuhnre",
+      "name": "Klettern",
+      "emoji": "🧗"
+    }
+  ],
+  "orte": [
+    {
+      "id": "aszftiie9pmmmsuhnre",
+      "name": "Lenkertasche",
+      "color": "#1a6b4a",
+      "project": "425avcw7vf2mmsuhnre"
+    },
+    {
+      "id": "hg0cay2bzymmsuhnre",
+      "name": "Rahmentasche",
+      "color": "#1a5080",
+      "project": "425avcw7vf2mmsuhnre"
+    },
+    {
+      "id": "k80rw75yh1mmsuhnre",
+      "name": "Satteltasche",
+      "color": "#c85a0a",
+      "project": "425avcw7vf2mmsuhnre"
+    },
+    {
+      "id": "l5b8qa03y5jmmsuhnre",
+      "name": "Vorderradtaschen",
+      "color": "#7a5aa0",
+      "project": "425avcw7vf2mmsuhnre"
+    },
+    {
+      "id": "z3ry401uitrmmsuhnre",
+      "name": "Hüfttasche",
+      "color": "#2a8a9a",
+      "project": "425avcw7vf2mmsuhnre"
+    }
+  ],
+  "items": [
+    {
+      "id": "mx55a9h7uqdmmsuhnre",
+      "name": "Flickzeug",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 50
+    },
+    {
+      "id": "a5muhdr33fvmmsuhnre",
+      "name": "Kettenschlösser 3-5x",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 35
+    },
+    {
+      "id": "r6q90ikp2emmsuhnre",
+      "name": "Multitool",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 180
+    },
+    {
+      "id": "rovrtwqcbrrmmsuhnre",
+      "name": "Luftpumpe",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 130
+    },
+    {
+      "id": "ggvky2hhjmmmsuhnre",
+      "name": "Kettenöl",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 90
+    },
+    {
+      "id": "pdssqcf3hxmmsuhnre",
+      "name": "Gaffa-Tape",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 80
+    },
+    {
+      "id": "easiyt4uoemmsuhnre",
+      "name": "Schlauch (Ersatz)",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 100
+    },
+    {
+      "id": "exigr0bvi8cmmsuhnre",
+      "name": "Reifenheber",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 20
+    },
+    {
+      "id": "gdi1z87ttlommsuhnre",
+      "name": "Kabelbinder",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 30
+    },
+    {
+      "id": "d4tbo272o7fmmsuhnre",
+      "name": "Fahrradschloss",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 350
+    },
+    {
+      "id": "115oxwsgwbdhmmsuhnre",
+      "name": "Abspanngurten",
+      "category": "Fahrrad & Reparatur",
+      "prio": "OP",
+      "weight": 120
+    },
+    {
+      "id": "amjtv07fsh7mmsuhnre",
+      "name": "Ersatz-Bremsbeläge",
+      "category": "Fahrrad & Reparatur",
+      "prio": "OP",
+      "weight": 60
+    },
+    {
+      "id": "wppprytwugfmmsuhnre",
+      "name": "Schlafsack",
+      "category": "Camping & Ausrüstung",
+      "prio": "MH",
+      "weight": 850
+    },
+    {
+      "id": "43yqs9dzfd4mmsuhnre",
+      "name": "Zelt / Biwaksack",
+      "category": "Camping & Ausrüstung",
+      "prio": "MH",
+      "weight": 1200
+    },
+    {
+      "id": "9xu1n9p38mrmmsuhnre",
+      "name": "Isomatte",
+      "category": "Camping & Ausrüstung",
+      "prio": "MH",
+      "weight": 400
+    },
+    {
+      "id": "8cs98611x7mmsuhnre",
+      "name": "Campingkocher / JetBoil",
+      "category": "Camping & Ausrüstung",
+      "prio": "MH",
+      "weight": 450
+    },
+    {
+      "id": "a4rs7opu5o6mmsuhnre",
+      "name": "Kochgeschirr",
+      "category": "Camping & Ausrüstung",
+      "prio": "MH",
+      "weight": 280
+    },
+    {
+      "id": "02rpfl0rj3mmmsuhnre",
+      "name": "Feuerzeug",
+      "category": "Camping & Ausrüstung",
+      "prio": "MH",
+      "weight": 25
+    },
+    {
+      "id": "n88odeplxi8mmsuhnre",
+      "name": "Paracord",
+      "category": "Camping & Ausrüstung",
+      "prio": "MH",
+      "weight": 60
+    },
+    {
+      "id": "9se0gp3501emmsuhnre",
+      "name": "Mückenschutz – Balkan!",
+      "category": "Camping & Ausrüstung",
+      "prio": "MH",
+      "weight": 80
+    },
+    {
+      "id": "3b4itanlmpnmmsuhnre",
+      "name": "Schmerzmittel",
+      "category": "Reiseapotheke",
+      "prio": "MH",
+      "weight": 40
+    },
+    {
+      "id": "aup9e26k8cmmsuhnre",
+      "name": "Blasenpflaster",
+      "category": "Reiseapotheke",
+      "prio": "MH",
+      "weight": 20
+    },
+    {
+      "id": "mkrsc2oe4lkmmsuhnre",
+      "name": "Erste-Hilfe-Set",
+      "category": "Reiseapotheke",
+      "prio": "MH",
+      "weight": 120
+    },
+    {
+      "id": "avf6k1r5jhsmmsuhnre",
+      "name": "Sonnencreme LSF 50+",
+      "category": "Reiseapotheke",
+      "prio": "MH",
+      "weight": 150
+    },
+    {
+      "id": "9eglv8zemyhmmsuhnre",
+      "name": "Elektrolytpulver",
+      "category": "Reiseapotheke",
+      "prio": "MH",
+      "weight": 60
+    },
+    {
+      "id": "6u28x7kbt9mmsuhnre",
+      "name": "Antiallergikum",
+      "category": "Reiseapotheke",
+      "prio": "MH",
+      "weight": 30
+    },
+    {
+      "id": "9rpdbc724w8mmsuhnre",
+      "name": "Wund- und Heilsalbe",
+      "category": "Reiseapotheke",
+      "prio": "MH",
+      "weight": 50
+    },
+    {
+      "id": "zx91df58spmmsuhnre",
+      "name": "Betadine-Salbe",
+      "category": "Reiseapotheke",
+      "prio": "OP",
+      "weight": 40
+    },
+    {
+      "id": "gloyinq8lw4mmsuhnre",
+      "name": "Handy",
+      "category": "Technik & Orientierung",
+      "prio": "MH",
+      "weight": 200
+    },
+    {
+      "id": "epda8dl04grmmsuhnre",
+      "name": "Powerbank / Solarpanel",
+      "category": "Technik & Orientierung",
+      "prio": "MH",
+      "weight": 320
+    },
+    {
+      "id": "em5qme6a5wkmmsuhnre",
+      "name": "Ladekabel für alle Geräte",
+      "category": "Technik & Orientierung",
+      "prio": "MH",
+      "weight": 80
+    },
+    {
+      "id": "vyvingqcbammsuhnre",
+      "name": "Fahrradcomputer",
+      "category": "Technik & Orientierung",
+      "prio": "MH",
+      "weight": 70
+    },
+    {
+      "id": "5w2ehy1ud8ammsuhnre",
+      "name": "Stirnlampe",
+      "category": "Technik & Orientierung",
+      "prio": "MH",
+      "weight": 90
+    },
+    {
+      "id": "99z5kw1pfckmmsuhnre",
+      "name": "Offline-Karten Komoot",
+      "category": "Technik & Orientierung",
+      "prio": "MH",
+      "weight": 0
+    },
+    {
+      "id": "uix49w8ccdnmmsuhnre",
+      "name": "GPS-Gerät",
+      "category": "Technik & Orientierung",
+      "prio": "OP",
+      "weight": 150
+    },
+    {
+      "id": "q9b8lql03ymmsuhnre",
+      "name": "Kopfhörer",
+      "category": "Technik & Orientierung",
+      "prio": "OP",
+      "weight": 85
+    },
+    {
+      "id": "o299yrsxuprmmsuhnre",
+      "name": "Radhose mit Polster",
+      "category": "Bekleidung",
+      "prio": "MH",
+      "weight": 300
+    },
+    {
+      "id": "tujxgxgjsoqmmsuhnre",
+      "name": "Fahrradhelm",
+      "category": "Bekleidung",
+      "prio": "MH",
+      "weight": 280
+    },
+    {
+      "id": "3z0n8tn0jhhmmsuhnre",
+      "name": "Regenpellerine",
+      "category": "Bekleidung",
+      "prio": "MH",
+      "weight": 220
+    },
+    {
+      "id": "lhkhl1xd7jgmmsuhnre",
+      "name": "Windweste",
+      "category": "Bekleidung",
+      "prio": "MH",
+      "weight": 180
+    },
+    {
+      "id": "iwlu2cmit5rmmsuhnre",
+      "name": "Armlinge",
+      "category": "Bekleidung",
+      "prio": "MH",
+      "weight": 60
+    },
+    {
+      "id": "1xy4tiof2emmmsuhnre",
+      "name": "Fahrradsocken",
+      "category": "Bekleidung",
+      "prio": "MH",
+      "weight": 50
+    },
+    {
+      "id": "o0paqkq54ddmmsuhnre",
+      "name": "Fahrradhandschuhe",
+      "category": "Bekleidung",
+      "prio": "MH",
+      "weight": 80
+    },
+    {
+      "id": "2i806uzjoidmmsuhnre",
+      "name": "Fleecejacke",
+      "category": "Bekleidung",
+      "prio": "OP",
+      "weight": 350
+    },
+    {
+      "id": "xfknzskrnsmmsuhnre",
+      "name": "Energieriegel / Snacks",
+      "category": "Verpflegung",
+      "prio": "MH",
+      "weight": 400
+    },
+    {
+      "id": "qwypdxd0lepmmsuhnre",
+      "name": "Instant-Mahlzeiten",
+      "category": "Verpflegung",
+      "prio": "MH",
+      "weight": 300
+    },
+    {
+      "id": "zyiiotkerlmmsuhnre",
+      "name": "Traubenzucker",
+      "category": "Verpflegung",
+      "prio": "MH",
+      "weight": 120
+    }
+  ],
+  "categories": [
+    "Fahrrad & Reparatur",
+    "Camping & Ausrüstung",
+    "Reiseapotheke",
+    "Technik & Orientierung",
+    "Bekleidung",
+    "Verpflegung"
+  ],
+  "packlists": [],
+  "theme": "light"
+}
