@@ -246,7 +246,8 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
   <h1>🎒 Pack<span>Organizer</span></h1>
   <div id="hdr-r">
     <button class="tbtn bgh" onclick="toggleTheme()" id="theme-btn">🌙 Dark</button>
-    <button class="tbtn bg" onclick="exportJSON()" title="Daten als packorganizer_data.json speichern">💾 Speichern</button>
+    <button class="tbtn bgh" onclick="openM('m-gh-token')" id="gh-status" title="GitHub Verbindung">🔑 Kein Token</button>
+    <button class="tbtn bg" onclick="exportJSON()" title="Daten als packorganizer_data.json speichern">💾 Export</button>
     <button class="tbtn bo" onclick="openM('m-import')">📂 Laden</button>
   </div>
 </div>
@@ -497,6 +498,35 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
     </div>
   </div>
 
+<!-- GITHUB TOKEN MODAL -->
+<div class="moverlay" id="m-gh-token">
+  <div class="modal">
+    <div class="mhdr" style="background:linear-gradient(135deg,#1a3a5a,#1a5080)">
+      <span class="mhdr-t">☁️ GitHub Verbindung</span>
+      <button class="mcls" onclick="closeM('m-gh-token')">✕</button>
+    </div>
+    <div class="mcon" style="gap:10px">
+      <p style="font-size:.75rem;color:var(--tx2);line-height:1.5">
+        Damit Daten automatisch auf GitHub gespeichert werden, benötigst du einen
+        <strong>Personal Access Token</strong> mit <code>repo</code>-Berechtigung.<br><br>
+        <a href="https://github.com/settings/tokens/new?scopes=repo&description=PackOrganizer" target="_blank" style="color:var(--g1)">
+          🔗 Token auf GitHub erstellen
+        </a>
+      </p>
+      <div>
+        <label class="flbl">GitHub Token</label>
+        <input class="fi" id="gh-token-input" type="password" placeholder="ghp_xxxxxxxxxxxx"
+          value="" autocomplete="off" style="font-family:monospace">
+      </div>
+      <div id="gh-token-current" style="font-size:.71rem;color:var(--tx3)"></div>
+      <div class="frow2">
+        <button class="fcancel" onclick="clearGhToken()" style="color:var(--dn)">🗑 Token löschen</button>
+        <button class="fsave" onclick="saveGhToken()">💾 Speichern & Verbinden</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -518,13 +548,14 @@ let curPL={id:null,name:'Neue Packliste',projectId:null,assignments:{}};
 // ══════════════════════════════════
 // INIT
 // ══════════════════════════════════
-function init(){
-  loadS();
+async function init(){
+  try{ const d=localStorage.getItem('po4'); if(d) S={...S,...JSON.parse(d)}; }catch(e){}
   if(!S.projects.length) seed();
   if(!S.packlists) S.packlists=[];
   if(!S.orte) S.orte=[];
   applyTheme();
   renderAll();
+  await loadS();
 }
 
 function seed(){
@@ -579,33 +610,122 @@ function seed(){
 }
 
 const FILE_NAME = 'packorganizer_data.json';
+const GH_REPO  = 'hschachtler/Packlist';
+const GH_PATH  = 'packorganizer_data.json';
 let autoSaveTimer = null;
+let ghFileSha = null; // GitHub file SHA needed for updates
 
+// ── GitHub Token ──────────────────────────────────────────
+function ghToken(){ return localStorage.getItem('gh_token') || ''; }
+function ghHeaders(){
+  return {
+    'Authorization': 'token ' + ghToken(),
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json'
+  };
+}
+
+// ── Save: localStorage + GitHub ──────────────────────────
 function saveS(){
   try{ localStorage.setItem('po4', JSON.stringify(S)); }catch(e){}
-  // Debounced auto-download: waits 800ms after last change
   clearTimeout(autoSaveTimer);
-  autoSaveTimer = setTimeout(()=>autoDownload(), 800);
+  autoSaveTimer = setTimeout(()=>saveToGitHub(), 1500);
 }
 
-function autoDownload(){
+async function saveToGitHub(){
+  if(!ghToken()){ return; }
   try{
-    const json = JSON.stringify(S, null, 2);
-    const blob = new Blob([json], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = FILE_NAME;
-    a.click();
-    setTimeout(()=>URL.revokeObjectURL(url), 1000);
-  }catch(e){}
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(S, null, 2))));
+    const body = {
+      message: 'PackOrganizer: Daten aktualisiert',
+      content: content
+    };
+    if(ghFileSha) body.sha = ghFileSha;
+    const resp = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_PATH}`, {
+      method: 'PUT',
+      headers: ghHeaders(),
+      body: JSON.stringify(body)
+    });
+    if(resp.ok){
+      const data = await resp.json();
+      ghFileSha = data.content.sha;
+      showGhStatus('✅ GitHub gespeichert', false);
+    } else {
+      const err = await resp.json();
+      showGhStatus('⚠️ GitHub Fehler: ' + (err.message||resp.status), true);
+    }
+  }catch(e){
+    showGhStatus('⚠️ Netzwerkfehler', true);
+  }
 }
 
-function loadS(){
+// ── Load: GitHub first, localStorage fallback ─────────────
+async function loadS(){
+  // Always load localStorage first as immediate fallback
   try{
     const d = localStorage.getItem('po4');
     if(d) S = {...S, ...JSON.parse(d)};
   }catch(e){}
+
+  if(!ghToken()){ showTokenPrompt(); return; }
+
+  try{
+    const resp = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${GH_PATH}`, {
+      headers: ghHeaders()
+    });
+    if(resp.ok){
+      const data = await resp.json();
+      ghFileSha = data.sha;
+      const decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
+      const parsed = JSON.parse(decoded);
+      if(parsed.projects){
+        S = {...S, ...parsed};
+        if(!S.packlists) S.packlists=[];
+        if(!S.orte) S.orte=[];
+        localStorage.setItem('po4', JSON.stringify(S));
+        renderAll(); applyTheme();
+        showGhStatus('☁️ Von GitHub geladen', false);
+      }
+    } else if(resp.status === 404){
+      // File doesn't exist yet on GitHub – will be created on first save
+      showGhStatus('ℹ️ Noch kein GitHub-Stand – wird beim nächsten Speichern angelegt', false);
+    } else {
+      showGhStatus('⚠️ GitHub laden fehlgeschlagen', true);
+    }
+  }catch(e){
+    showGhStatus('⚠️ GitHub nicht erreichbar', true);
+  }
+}
+
+// ── Status indicator ──────────────────────────────────────
+function showGhStatus(msg, isErr){
+  let el = document.getElementById('gh-status');
+  if(!el) return;
+  el.textContent = msg;
+  el.style.color = isErr ? 'var(--dn)' : 'var(--tx2)';
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>{ el.textContent = ghToken() ? '☁️ GitHub' : '🔑 Kein Token'; el.style.color='var(--tx3)'; }, 4000);
+}
+
+// ── Token Modal ───────────────────────────────────────────
+function showTokenPrompt(){
+  openM('m-gh-token');
+}
+function saveGhToken(){
+  const t = document.getElementById('gh-token-input').value.trim();
+  if(!t){ toast('Bitte Token eingeben', 'err'); return; }
+  localStorage.setItem('gh_token', t);
+  closeM('m-gh-token');
+  showGhStatus('🔑 Token gespeichert – lade Daten…', false);
+  ghFileSha = null;
+  loadS();
+}
+function clearGhToken(){
+  localStorage.removeItem('gh_token');
+  ghFileSha = null;
+  document.getElementById('gh-token-input').value='';
+  document.getElementById('gh-token-current').textContent='Token gelöscht.';
+  showGhStatus('🔑 Kein Token', false);
 }
 
 // ══════════════════════════════════
@@ -1182,7 +1302,7 @@ function applyImportData(raw){
     S = {...S, ...p};
     if(!S.packlists) S.packlists=[];
     if(!S.orte) S.orte=[];
-    // Reset auto-save timer — don't immediately re-download what we just loaded
+    // Reset auto-save timer — don't immediately re-save what we just loaded
     clearTimeout(autoSaveTimer);
     localStorage.setItem('po4', JSON.stringify(S));
     closeM('m-import');
@@ -1198,7 +1318,16 @@ function applyImportData(raw){
 // HELPERS
 // ══════════════════════════════════
 function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
-function openM(id){document.getElementById(id).classList.add('open');}
+function openM(id){
+  document.getElementById(id).classList.add('open');
+  if(id==='m-gh-token'){
+    const t = ghToken();
+    document.getElementById('gh-token-input').value = t ? '••••••••••••' : '';
+    document.getElementById('gh-token-current').textContent = t
+      ? '✅ Token gespeichert ('+t.substring(0,8)+'…)'
+      : '⚠️ Kein Token gesetzt';
+  }
+}
 function closeM(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.moverlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
