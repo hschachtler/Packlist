@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version 1.0.4 -->
+<!-- Version 1.0.5 -->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -144,6 +144,8 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 /* THE PACK TABLE */
 /* border-separate required for position:sticky on th */
 .ptable{border-collapse:separate;border-spacing:0;table-layout:fixed;width:100%;font-size:.72rem}
+/* thead sticky – robustere Methode */
+.ptable thead{position:sticky;top:0;z-index:11}
 .ptable th{
   background:var(--surface);padding:0;
   position:sticky;top:0;z-index:10;overflow:hidden;
@@ -269,7 +271,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 #print-hdr p{font-size:7pt;color:#5a7a9a;margin-top:1pt}
 </style>
 </head>
-<body data-version="1.0.4">
+<body data-version="1.0.5">
 
 <!-- TOPBAR -->
 <div id="topbar">
