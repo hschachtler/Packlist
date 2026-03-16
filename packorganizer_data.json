@@ -440,6 +440,13 @@
       "category": "Verpflegung",
       "prio": "MH",
       "weight": 400
+    },
+    {
+      "id": "o9b2o73v9ommsztcqp",
+      "name": "Plastiktaschen (Regen)",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 20
     }
   ],
   "categories": [
