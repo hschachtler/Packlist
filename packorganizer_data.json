@@ -406,6 +406,14 @@
     "Bekleidung",
     "Verpflegung"
   ],
-  "packlists": [],
+  "packlists": [
+    {
+      "id": "17350tgkfmimmswcm55",
+      "name": "test",
+      "projectId": "425avcw7vf2mmsuhnre",
+      "date": "16.03.2026",
+      "assignments": {}
+    }
+  ],
   "theme": "light"
 }
