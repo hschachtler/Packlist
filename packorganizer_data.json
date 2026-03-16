@@ -37,6 +37,12 @@
   ],
   "orte": [
     {
+      "id": "l5b8qa03y5jmmsuhnre",
+      "name": "Fahrrad",
+      "color": "#7a5aa0",
+      "project": "425avcw7vf2mmsuhnre"
+    },
+    {
       "id": "hg0cay2bzymmsuhnre",
       "name": "Rahmen Untertasche",
       "color": "#1a5080",
@@ -52,12 +58,6 @@
       "id": "k80rw75yh1mmsuhnre",
       "name": "Arschrakete",
       "color": "#c85a0a",
-      "project": "425avcw7vf2mmsuhnre"
-    },
-    {
-      "id": "l5b8qa03y5jmmsuhnre",
-      "name": "Fahrrad",
-      "color": "#7a5aa0",
       "project": "425avcw7vf2mmsuhnre"
     },
     {
