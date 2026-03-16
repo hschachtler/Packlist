@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version 1.1.0 -->
+<!-- Version 1.2.0 -->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -270,6 +270,14 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 #print-hdr h2{font-size:12pt;color:#1a2b3c}
 #print-hdr p{font-size:7pt;color:#5a7a9a;margin-top:1pt}
 
+
+/* ═══ COLUMN DRAG & DROP ═══ */
+.col-ort[draggable="true"]{cursor:grab}
+.col-ort[draggable="true"]:active{cursor:grabbing}
+.col-ort.drag-over{outline:2px solid var(--g1);outline-offset:-2px;background:var(--acc)!important}
+.col-ort.dragging{opacity:.35}
+.th-drag-handle{position:absolute;left:3px;top:50%;transform:translateY(-50%);font-size:.6rem;color:var(--tx3);line-height:1;pointer-events:none;user-select:none}
+
 /* ═══ PIN OVERLAY ═══ */
 #pin-overlay{
   position:fixed;inset:0;z-index:9999;
@@ -294,7 +302,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .pin-setup-hint{font-size:.67rem;color:var(--tx3);margin-top:20px;text-align:center;line-height:1.6}
 </style>
 </head>
-<body data-version="1.1.0">
+<body data-version="1.2.0">
 
 <!-- ═══ PIN OVERLAY ═══ -->
 <div id="pin-overlay">
@@ -1051,7 +1059,13 @@ function renderPLView(){
   const ortCols=orte.map(o=>{
     const ortWt=items.reduce((s,i)=>{if((curPL.assignments||{})[i.id]===o.id)s+=Number(i.weight||0);return s;},0);
     const ortWtStr=ortWt>0?(ortWt>=1000?((ortWt/1000).toFixed(2)+'kg'):(ortWt+'g')):'';
-    return `<th class="col-ort" style="position:relative;min-width:70px">
+    return `<th class="col-ort" draggable="true" data-ort-id="${o.id}" style="position:relative;min-width:70px"
+      ondragstart="ortDragStart(event)"
+      ondragover="ortDragOver(event)"
+      ondragleave="ortDragLeave(event)"
+      ondrop="ortDrop(event)"
+      ondragend="ortDragEnd(event)">
+      <span class="th-drag-handle">⠿</span>
       <div class="th-inner">
         <div class="th-row1">
           <div class="th-swatch" style="background:${o.color}"></div>
@@ -1680,6 +1694,56 @@ function deletePIN() {
   clearPINHash();
   closeM('m-pin');
   toast('🔓 PIN entfernt', 'ok');
+}
+
+
+// ══════════════════════════════════
+// COLUMN DRAG & DROP (Ort-Spalten)
+// ══════════════════════════════════
+let ortDragSrcId = null;
+
+function ortDragStart(e) {
+  ortDragSrcId = e.currentTarget.dataset.ortId;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', ortDragSrcId);
+}
+
+function ortDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  // Don't highlight same column
+  if (e.currentTarget.dataset.ortId !== ortDragSrcId) {
+    e.currentTarget.classList.add('drag-over');
+  }
+}
+
+function ortDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function ortDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.col-ort').forEach(th => th.classList.remove('drag-over'));
+}
+
+function ortDrop(e) {
+  e.preventDefault();
+  const targetId = e.currentTarget.dataset.ortId;
+  e.currentTarget.classList.remove('drag-over');
+  if (!ortDragSrcId || ortDragSrcId === targetId) return;
+
+  // Reorder S.orte
+  const srcIdx  = S.orte.findIndex(o => o.id === ortDragSrcId);
+  const tgtIdx  = S.orte.findIndex(o => o.id === targetId);
+  if (srcIdx < 0 || tgtIdx < 0) return;
+
+  const [moved] = S.orte.splice(srcIdx, 1);
+  S.orte.splice(tgtIdx, 0, moved);
+
+  saveS();
+  renderPLView();
+  ortDragSrcId = null;
 }
 
 
