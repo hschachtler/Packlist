@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version 1.2.0 -->
+<!-- Version 1.3.0 -->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -66,9 +66,13 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
 /* ADMIN 3-COL */
 #view-admin.active{display:flex}
-.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);flex:1;overflow:hidden;height:100%}
-.acol{display:flex;flex-direction:column;border-right:1px solid var(--bd);overflow:hidden}
-.acol:last-child{border-right:none}
+.admin-grid{display:grid;grid-template-columns:var(--acol1,1fr) 4px var(--acol2,1fr) 4px var(--acol3,1fr);flex:1;overflow:hidden;height:100%}
+.acol{display:flex;flex-direction:column;overflow:hidden;min-width:120px}
+/* Vertical resizer between admin columns */
+.acol-resizer{background:var(--bd);cursor:col-resize;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;user-select:none;-webkit-user-select:none}
+.acol-resizer:hover,.acol-resizer.resizing{background:var(--g1)}
+.acol-resizer::after{content:'';display:block;width:2px;height:24px;border-radius:1px;background:var(--bd2)}
+.acol-resizer:hover::after,.acol-resizer.resizing::after{background:#fff}
 .acol-hdr{padding:9px 13px;background:var(--surface);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .acol-hdr h3{font-family:'Playfair Display',serif;font-size:.83rem;color:var(--tx)}
 .acol-sub{font-size:.58rem;color:var(--tx3);margin-top:1px}
@@ -302,7 +306,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .pin-setup-hint{font-size:.67rem;color:var(--tx3);margin-top:20px;text-align:center;line-height:1.6}
 </style>
 </head>
-<body data-version="1.2.0">
+<body data-version="1.3.0">
 
 <!-- ═══ PIN OVERLAY ═══ -->
 <div id="pin-overlay">
@@ -373,7 +377,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
 <!-- ═══ VIEW: VERWALTUNG ═══ -->
 <div id="view-admin" class="view">
-  <div class="admin-grid">
+  <div class="admin-grid" id="admin-grid">
 
     <!-- Spalte 1: Sportarten + Orte -->
     <div class="acol">
@@ -393,6 +397,9 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
       </div>
     </div>
 
+    <!-- Resizer 1|2 -->
+    <div class="acol-resizer" onmousedown="adminResizeStart(event,0)"></div>
+
     <!-- Spalte 2: Gegenstände -->
     <div class="acol">
       <div class="acol-hdr">
@@ -405,6 +412,9 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
       <div class="frow" id="items-filter"></div>
       <div class="acol-scroll" id="items-list"></div>
     </div>
+
+    <!-- Resizer 2|3 -->
+    <div class="acol-resizer" onmousedown="adminResizeStart(event,1)"></div>
 
     <!-- Spalte 3: Gespeicherte Packlisten -->
     <div class="acol">
@@ -873,7 +883,7 @@ function showTab(tab){
     document.querySelectorAll('.tab-btn')[i].classList.toggle('active',t===tab);
     document.getElementById('view-'+t).classList.toggle('active',t===tab);
   });
-  if(tab==='admin') renderAdminView();
+  if(tab==='admin'){renderAdminView();setTimeout(initAdminCols,0);}
   if(tab==='packlist') renderPLView();
   if(tab==='projects') renderProjectsView();
 }
@@ -1744,6 +1754,78 @@ function ortDrop(e) {
   saveS();
   renderPLView();
   ortDragSrcId = null;
+}
+
+
+// ══════════════════════════════════
+// ADMIN COLUMN RESIZING
+// ══════════════════════════════════
+let adminColW = null; // [w1, w2, w3] in px
+
+function initAdminCols() {
+  const grid = document.getElementById('admin-grid');
+  if (!grid) return;
+  const total = grid.clientWidth - 8; // subtract 2 resizers (4px each)
+  if (!adminColW) {
+    adminColW = [Math.floor(total/3), Math.floor(total/3), total - 2*Math.floor(total/3)];
+  }
+  applyAdminCols();
+}
+
+function applyAdminCols() {
+  const grid = document.getElementById('admin-grid');
+  if (!grid || !adminColW) return;
+  grid.style.gridTemplateColumns = `${adminColW[0]}px 4px ${adminColW[1]}px 4px ${adminColW[2]}px`;
+}
+
+function adminResizeStart(e, resizerIdx) {
+  e.preventDefault();
+  const resizer = e.currentTarget;
+  resizer.classList.add('resizing');
+  const startX = e.clientX;
+  const grid = document.getElementById('admin-grid');
+  const total = grid.clientWidth - 8;
+
+  // Copy current widths
+  if (!adminColW) initAdminCols();
+  const startW = [...adminColW];
+
+  document.body.style.cursor = 'col-resize';
+  document.body.style.userSelect = 'none';
+
+  const onMove = ev => {
+    const delta = ev.clientX - startX;
+    const MIN = 120;
+    if (resizerIdx === 0) {
+      // Resize between col1 and col2
+      const newW1 = Math.max(MIN, startW[0] + delta);
+      const newW2 = Math.max(MIN, startW[1] - delta);
+      if (newW1 + newW2 <= total - MIN) {
+        adminColW[0] = newW1;
+        adminColW[1] = newW2;
+      }
+    } else {
+      // Resize between col2 and col3
+      const newW2 = Math.max(MIN, startW[1] + delta);
+      const newW3 = Math.max(MIN, startW[2] - delta);
+      if (newW2 + newW3 <= total - MIN) {
+        adminColW[1] = newW2;
+        adminColW[2] = newW3;
+      }
+    }
+    applyAdminCols();
+  };
+
+  const onUp = () => {
+    resizer.classList.remove('resizing');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+  };
+
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
 }
 
 
