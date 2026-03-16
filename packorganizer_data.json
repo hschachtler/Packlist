@@ -414,6 +414,13 @@
       "category": "Verpflegung",
       "prio": "MH",
       "weight": 120
+    },
+    {
+      "id": "l8h9b7eoxsmmmswzpg1",
+      "name": "Biwaksack",
+      "category": "Camping & Ausrüstung",
+      "prio": "OP",
+      "weight": 1700
     }
   ],
   "categories": [
