@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version 1.1.0 -->
+<!-- Version 1.0.2 -->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -143,11 +143,16 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 /* THE PACK TABLE */
 .ptable{border-collapse:collapse;table-layout:fixed;width:100%;font-size:.72rem}
 .ptable th{background:var(--surface);border:1px solid var(--bd);padding:0;position:sticky;top:0;z-index:10;overflow:hidden;white-space:nowrap}
-.ptable th .th-inner{padding:6px 8px;display:flex;flex-direction:column;align-items:center;gap:1px;overflow:hidden}
-.th-swatch{width:100%;height:4px;border-radius:2px;margin-bottom:1px;flex-shrink:0}
+.ptable th .th-inner{padding:0;display:flex;flex-direction:column;align-items:stretch;overflow:hidden}
+/* Row 1: swatch + name */
+.th-row1{display:flex;flex-direction:column;align-items:center;padding:5px 8px 3px;gap:2px;border-bottom:1px solid var(--bd2)}
+/* Row 2: weight / sub-info */
+.th-row2{display:flex;align-items:center;justify-content:center;padding:3px 8px 4px;background:var(--s2);min-height:18px}
+.th-swatch{width:100%;height:3px;border-radius:2px;flex-shrink:0}
 .th-name{font-family:'Playfair Display',serif;font-weight:700;font-size:.71rem;color:var(--tx);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.th-wt{font-size:.6rem;color:var(--tx2);font-weight:600;white-space:nowrap}
-.ptable th.col-item .th-inner{align-items:flex-start}
+.th-wt{font-size:.58rem;color:var(--tx2);font-weight:600;white-space:nowrap}
+.ptable th.col-item .th-inner .th-row1{align-items:flex-start}
+.ptable th.col-item .th-inner .th-row1 .th-name{text-align:left}
 .ptable td{border:1px solid var(--bd);padding:5px 8px;vertical-align:middle;overflow:hidden}
 
 /* COLUMN RESIZER */
@@ -161,12 +166,15 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .td-cat{font-size:.58rem;color:var(--tx3);display:block;margin-top:1px}
 .td-wt{font-size:.62rem;color:var(--tx3);white-space:nowrap}
 .td-prio{display:inline-block;font-size:.55rem;font-weight:600;padding:1px 5px;border-radius:5px;border:1px solid;margin-left:4px;vertical-align:middle}
-/* Dot indicator in cell */
-.ort-cell{text-align:center;min-width:80px;cursor:pointer;position:relative}
-.ort-dot{width:18px;height:18px;border-radius:4px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:all .15s;border:2px solid transparent}
-.ort-dot.assigned{color:#fff;font-size:.65rem}
+/* Dot indicator in cell – two-line layout */
+.ort-cell{text-align:center;min-width:70px;cursor:pointer;position:relative;padding:0!important}
+.ort-cell-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 4px 3px}
+.ort-dot{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.72rem;transition:all .15s;border:2px solid transparent;flex-shrink:0}
+.ort-dot.assigned{color:#fff;font-size:.68rem}
 .ort-dot.unassigned{background:var(--s2);border:2px dashed var(--bd2);color:var(--tx3)}
-.ort-dot:hover{transform:scale(1.15)}
+.ort-dot:hover{transform:scale(1.12)}
+.ort-label{font-size:.5rem;font-weight:600;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;line-height:1;min-height:.6rem}
+.ort-label.has-val{color:var(--tx2)}
 /* Weight row */
 .wt-row td{background:var(--acc)!important;font-size:.63rem;font-weight:600;color:var(--tx2);padding:4px 8px}
 [data-theme="dark"] .wt-row td{background:#1a2a38!important}
@@ -214,105 +222,33 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
 /* ═══════════ PRINT STYLES ═══════════ */
 @media print{
-  @page{size:A4 landscape;margin:7mm 7mm}
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-  html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#000!important;display:block!important}
-  #topbar,#pstrip,#tab-nav,.pack-toolbar,.pack-stat-bar,#pl-strip,#toast,.moverlay,
-  #view-projects,#view-admin,#view-packlist{display:none!important}
-  #print-page{display:block!important}
+  @page{size:A4 landscape;margin:8mm 10mm}
+  html,body{height:auto;overflow:visible;background:#fff!important;color:#000!important}
+  #topbar,#pstrip,#tab-nav,.pack-toolbar,.pack-stat-bar,#pl-strip,#toast,.moverlay{display:none!important}
+  .view{display:none!important}
+  #view-packlist{display:block!important;overflow:visible!important;flex:none!important}
+  .pack-table-wrap{overflow:visible!important;padding:0!important;flex:none!important}
+  .ptable{font-size:7pt;width:100%;table-layout:auto!important}
+  .ptable th,.ptable td{border:0.5pt solid #ccc;padding:2pt 4pt}
+  .ptable th .th-inner{padding:3pt 4pt}
+  .th-name{font-size:7pt}
+  .th-wt,.td-cat,.td-wt,.ac-sub{font-size:6pt}
+  .td-item{font-size:7pt}
+  .ort-dot.assigned{width:14px;height:14px;font-size:8pt;border-radius:3px}
+  .ort-dot.unassigned{display:none}
+  .wt-row td{background:#f0f0f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .cat-row td{background:#e0e0e0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ptable tr:nth-child(even) td{background:#fafafa!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .ort-dot.assigned{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .th-swatch{display:block;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #print-hdr{display:block!important}
 }
-#print-page{display:none}
-
-/* ── Print page layout ── */
-#print-page{
-  font-family:'DM Sans',sans-serif;
-  background:#fff;
-  width:100%;
-}
-#pp-title-bar{
-  background:#1a3a5c;
-  color:#fff;
-  padding:5pt 10pt 4pt;
-  margin-bottom:3pt;
-  border-radius:4pt;
-}
-#pp-title-bar h2{
-  font-family:'Playfair Display',serif;
-  font-size:10pt;
-  font-weight:700;
-  margin:0;
-}
-#pp-title-bar p{
-  font-size:6pt;
-  color:#9ab5cc;
-  margin:1pt 0 0;
-}
-#pp-cols{
-  display:flex;
-  gap:3pt;
-  width:100%;
-  align-items:flex-start;
-}
-.pp-col{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  gap:3pt;
-  min-width:0;
-}
-.pp-cat{
-  border:0.5pt solid #6a8aaa;
-  border-radius:3pt;
-  overflow:hidden;
-  break-inside:avoid;
-}
-.pp-cat-hdr{
-  background:#1a3a5c;
-  color:#fff;
-  font-size:6.2pt;
-  font-weight:700;
-  text-align:center;
-  padding:2.5pt 3pt;
-  font-family:'DM Sans',sans-serif;
-  letter-spacing:.02em;
-}
-.pp-item{
-  display:flex;
-  align-items:center;
-  border-top:0.3pt solid #c0ccd8;
-  padding:1.2pt 2pt 1.2pt 2pt;
-  font-size:5.4pt;
-  gap:2pt;
-}
-.pp-item.mh{background:#eef2f7}
-.pp-item.op{background:#fdf6ec}
-.pp-cb{
-  width:6pt;
-  height:6pt;
-  border:0.6pt solid #4a6680;
-  border-radius:1pt;
-  flex-shrink:0;
-}
-.pp-name{
-  flex:1;
-  font-size:5.4pt;
-  color:#1a1a1a;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.pp-tag{
-  font-size:4.8pt;
-  font-weight:700;
-  flex-shrink:0;
-  width:13pt;
-  text-align:right;
-}
-.pp-tag.mh{color:#1a3a5c}
-.pp-tag.op{color:#b8720a}
+#print-hdr{display:none;margin-bottom:4mm;font-family:'Playfair Display',serif}
+#print-hdr h2{font-size:12pt;color:#1a2b3c}
+#print-hdr p{font-size:7pt;color:#5a7a9a;margin-top:1pt}
 </style>
 </head>
-<body data-version="1.1.0">
+<body data-version="1.0.2">
 
 <!-- TOPBAR -->
 <div id="topbar">
@@ -395,18 +331,9 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
   </div>
 </div>
 
-<!-- ═══ PRINT PAGE (rendered by JS, shown only @print) ═══ -->
-<div id="print-page">
-  <div id="pp-title-bar">
-    <h2 id="pp-title">Packliste</h2>
-    <p id="pp-subtitle"></p>
-  </div>
-  <div id="pp-cols"></div>
-</div>
-
 <!-- ═══ VIEW: PACKLISTE ═══ -->
 <div id="view-packlist" class="view">
-  <div id="print-hdr" style="display:none">
+  <div id="print-hdr">
     <h2 id="print-title">Packliste</h2>
     <p id="print-sub"></p>
   </div>
@@ -1013,27 +940,40 @@ function renderPLView(){
   const thead=document.getElementById('pack-thead');
   const ortCols=orte.map(o=>{
     const ortWt=items.reduce((s,i)=>{if((curPL.assignments||{})[i.id]===o.id)s+=Number(i.weight||0);return s;},0);
-    const ortWtStr=ortWt>0?(ortWt>=1000?((ortWt/1000).toFixed(2)+'kg'):(ortWt+'g')):'';
+    const ortWtStr=ortWt>0?(ortWt>=1000?((ortWt/1000).toFixed(2)+'kg'):(ortWt+'g')):'–';
     return `<th style="position:relative;min-width:70px">
       <div class="th-inner">
-        <div class="th-swatch" style="background:${o.color}"></div>
-        <span class="th-name">${o.name}</span>
-        <span class="th-wt">${ortWtStr}</span>
+        <div class="th-row1">
+          <div class="th-swatch" style="background:${o.color}"></div>
+          <span class="th-name">${o.name}</span>
+        </div>
+        <div class="th-row2">
+          <span class="th-wt">${ortWtStr}</span>
+        </div>
       </div>
       <div class="col-resizer" onmousedown="startResize(event,this)"></div>
     </th>`;
   }).join('');
   thead.innerHTML=`<tr>
-    <th style="position:relative;text-align:left;min-width:120px">
-      <div class="th-inner" style="align-items:flex-start"><span class="th-name" style="font-size:.68rem">Gegenstand</span></div>
+    <th class="col-item" style="position:relative;text-align:left;min-width:120px">
+      <div class="th-inner">
+        <div class="th-row1"><span class="th-name" style="font-size:.68rem">Gegenstand</span></div>
+        <div class="th-row2"><span class="th-wt" style="color:var(--tx3)">Artikel</span></div>
+      </div>
       <div class="col-resizer" onmousedown="startResize(event,this)"></div>
     </th>
     <th style="position:relative;min-width:44px">
-      <div class="th-inner"><span class="th-name" style="font-size:.63rem">Prio</span></div>
+      <div class="th-inner">
+        <div class="th-row1"><span class="th-name" style="font-size:.63rem">Prio</span></div>
+        <div class="th-row2"><span class="th-wt">MH/OP</span></div>
+      </div>
       <div class="col-resizer" onmousedown="startResize(event,this)"></div>
     </th>
     <th style="position:relative;min-width:60px">
-      <div class="th-inner"><span class="th-name" style="font-size:.63rem">Gewicht</span></div>
+      <div class="th-inner">
+        <div class="th-row1"><span class="th-name" style="font-size:.63rem">Gewicht</span></div>
+        <div class="th-row2"><span class="th-wt">Gramm</span></div>
+      </div>
       <div class="col-resizer" onmousedown="startResize(event,this)"></div>
     </th>
     ${ortCols}
@@ -1049,8 +989,12 @@ function renderPLView(){
       const assignedOrtId=curPL.assignments[it.id]||null;
       const ortDots=orte.map(o=>{
         const isMe=assignedOrtId===o.id;
+        const label=isMe?'✓ zugewiesen':'';
         return `<td class="ort-cell" onclick="toggleAssign('${it.id}','${o.id}')">
-          <div class="ort-dot ${isMe?'assigned':'unassigned'}" style="${isMe?'background:'+o.color+';':''}">${isMe?'✓':''}</div>
+          <div class="ort-cell-inner">
+            <div class="ort-dot ${isMe?'assigned':'unassigned'}" style="${isMe?'background:'+o.color+';':''}">${isMe?'✓':''}</div>
+            <span class="ort-label${isMe?' has-val':''}">${isMe?'✓ hier':'&nbsp;'}</span>
+          </div>
         </td>`;
       }).join('');
       rows+=`<tr>
@@ -1093,68 +1037,7 @@ function toggleAssign(itemId, ortId){
 }
 
 function printPacklist(){
-  buildPrintPage();
   window.print();
-}
-
-// ── Build the A4-landscape category-column print layout ──────────────────
-function buildPrintPage(){
-  const proj = S.projects.find(p => p.id === (curPL.projectId || S.activeProject));
-  const items = S.items;
-
-  // Title
-  document.getElementById('pp-title').textContent = curPL.name || 'Packliste';
-  document.getElementById('pp-subtitle').textContent =
-    (proj ? proj.icon + ' ' + proj.name + '  ·  ' + (proj.year || '') : '') +
-    '  ·  MH = Must Have  ·  OP = Optional';
-
-  // Group items by category — preserve S.categories order
-  const catOrder = S.categories || [];
-  const grp = {};
-  items.forEach(it => {
-    const c = it.category || 'Sonstiges';
-    if (!grp[c]) grp[c] = [];
-    grp[c].push(it);
-  });
-  const orderedCats = [
-    ...catOrder.filter(c => grp[c]),
-    ...Object.keys(grp).filter(c => !catOrder.includes(c))
-  ];
-
-  // Build category block HTML
-  function catHTML(catName) {
-    const its = grp[catName] || [];
-    const rows = its.map(it => {
-      const cls = it.prio === 'MH' ? 'mh' : 'op';
-      return `<div class="pp-item ${cls}">
-        <div class="pp-cb"></div>
-        <span class="pp-name">${it.name}</span>
-        <span class="pp-tag ${cls}">${it.prio}</span>
-      </div>`;
-    }).join('');
-    return `<div class="pp-cat">
-      <div class="pp-cat-hdr">${catName}</div>
-      ${rows}
-    </div>`;
-  }
-
-  // Distribute categories into 5 columns by total item count (greedy bin-packing)
-  const NUM_COLS = 5;
-  const catSizes = orderedCats.map(c => ({ name: c, n: (grp[c] || []).length + 1.5 })); // +1.5 for header
-  const cols = Array.from({ length: NUM_COLS }, () => ({ cats: [], total: 0 }));
-
-  catSizes.forEach(cat => {
-    // Place into the column with least total so far
-    const minCol = cols.reduce((best, col, i) => col.total < cols[best].total ? i : best, 0);
-    cols[minCol].cats.push(cat.name);
-    cols[minCol].total += cat.n;
-  });
-
-  // Render columns
-  const ppCols = document.getElementById('pp-cols');
-  ppCols.innerHTML = cols.map(col =>
-    `<div class="pp-col">${col.cats.map(catHTML).join('')}</div>`
-  ).join('');
 }
 
 // ══════════════════════════════════
