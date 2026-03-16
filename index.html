@@ -35,6 +35,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 #topbar{background:var(--surface);border-bottom:1px solid var(--bd);padding:0 14px;display:flex;align-items:center;height:48px;flex-shrink:0;box-shadow:var(--sh);z-index:200;gap:8px}
 #topbar h1{font-family:'Playfair Display',serif;font-size:.85rem;color:var(--tx);white-space:nowrap}
 #topbar h1 span{color:var(--o1)}
+#app-version{font-size:.52rem;font-weight:600;color:var(--tx3);background:var(--s2);border:1px solid var(--bd2);border-radius:5px;padding:1px 5px;margin-left:5px;vertical-align:middle;letter-spacing:.02em;white-space:nowrap}
 .tbtn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:.67rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .2s}
 .tbtn:active{opacity:.72}
 .bg{background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;box-shadow:0 1px 5px rgba(0,0,0,.15)}
@@ -143,16 +144,11 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 /* THE PACK TABLE */
 .ptable{border-collapse:collapse;table-layout:fixed;width:100%;font-size:.72rem}
 .ptable th{background:var(--surface);border:1px solid var(--bd);padding:0;position:sticky;top:0;z-index:10;overflow:hidden;white-space:nowrap}
-.ptable th .th-inner{padding:0;display:flex;flex-direction:column;align-items:stretch;overflow:hidden}
-/* Row 1: swatch + name */
-.th-row1{display:flex;flex-direction:column;align-items:center;padding:5px 8px 3px;gap:2px;border-bottom:1px solid var(--bd2)}
-/* Row 2: weight / sub-info */
-.th-row2{display:flex;align-items:center;justify-content:center;padding:3px 8px 4px;background:var(--s2);min-height:18px}
-.th-swatch{width:100%;height:3px;border-radius:2px;flex-shrink:0}
+.ptable th .th-inner{padding:6px 8px;display:flex;flex-direction:column;align-items:center;gap:1px;overflow:hidden}
+.th-swatch{width:100%;height:4px;border-radius:2px;margin-bottom:1px;flex-shrink:0}
 .th-name{font-family:'Playfair Display',serif;font-weight:700;font-size:.71rem;color:var(--tx);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.th-wt{font-size:.58rem;color:var(--tx2);font-weight:600;white-space:nowrap}
-.ptable th.col-item .th-inner .th-row1{align-items:flex-start}
-.ptable th.col-item .th-inner .th-row1 .th-name{text-align:left}
+.th-wt{font-size:.6rem;color:var(--tx2);font-weight:600;white-space:nowrap}
+.ptable th.col-item .th-inner{align-items:flex-start}
 .ptable td{border:1px solid var(--bd);padding:5px 8px;vertical-align:middle;overflow:hidden}
 
 /* COLUMN RESIZER */
@@ -166,15 +162,12 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 .td-cat{font-size:.58rem;color:var(--tx3);display:block;margin-top:1px}
 .td-wt{font-size:.62rem;color:var(--tx3);white-space:nowrap}
 .td-prio{display:inline-block;font-size:.55rem;font-weight:600;padding:1px 5px;border-radius:5px;border:1px solid;margin-left:4px;vertical-align:middle}
-/* Dot indicator in cell – two-line layout */
-.ort-cell{text-align:center;min-width:70px;cursor:pointer;position:relative;padding:0!important}
-.ort-cell-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 4px 3px}
-.ort-dot{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.72rem;transition:all .15s;border:2px solid transparent;flex-shrink:0}
-.ort-dot.assigned{color:#fff;font-size:.68rem}
+/* Dot indicator in cell */
+.ort-cell{text-align:center;min-width:80px;cursor:pointer;position:relative}
+.ort-dot{width:18px;height:18px;border-radius:4px;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:all .15s;border:2px solid transparent}
+.ort-dot.assigned{color:#fff;font-size:.65rem}
 .ort-dot.unassigned{background:var(--s2);border:2px dashed var(--bd2);color:var(--tx3)}
-.ort-dot:hover{transform:scale(1.12)}
-.ort-label{font-size:.5rem;font-weight:600;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;line-height:1;min-height:.6rem}
-.ort-label.has-val{color:var(--tx2)}
+.ort-dot:hover{transform:scale(1.15)}
 /* Weight row */
 .wt-row td{background:var(--acc)!important;font-size:.63rem;font-weight:600;color:var(--tx2);padding:4px 8px}
 [data-theme="dark"] .wt-row td{background:#1a2a38!important}
@@ -252,7 +245,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 
 <!-- TOPBAR -->
 <div id="topbar">
-  <h1>🎒 Pack<span>Organizer</span></h1>
+  <h1>🎒 Pack<span>Organizer</span><span id="app-version"></span></h1>
   <div id="hdr-r">
     <button class="tbtn bgh" onclick="toggleTheme()" id="theme-btn">🌙 Dark</button>
     <button class="tbtn bgh" onclick="openM('m-gh-token')" id="gh-status" title="GitHub Verbindung">🔑 Kein Token</button>
@@ -559,6 +552,8 @@ let curPL={id:null,name:'Neue Packliste',projectId:null,assignments:{}};
 // INIT
 // ══════════════════════════════════
 async function init(){
+  const v=document.body.dataset.version;
+  if(v){const el=document.getElementById('app-version');if(el)el.textContent='v'+v;}
   try{ const d=localStorage.getItem('po4'); if(d) S={...S,...JSON.parse(d)}; }catch(e){}
   if(!S.projects.length) seed();
   if(!S.packlists) S.packlists=[];
@@ -940,40 +935,27 @@ function renderPLView(){
   const thead=document.getElementById('pack-thead');
   const ortCols=orte.map(o=>{
     const ortWt=items.reduce((s,i)=>{if((curPL.assignments||{})[i.id]===o.id)s+=Number(i.weight||0);return s;},0);
-    const ortWtStr=ortWt>0?(ortWt>=1000?((ortWt/1000).toFixed(2)+'kg'):(ortWt+'g')):'–';
+    const ortWtStr=ortWt>0?(ortWt>=1000?((ortWt/1000).toFixed(2)+'kg'):(ortWt+'g')):'';
     return `<th style="position:relative;min-width:70px">
       <div class="th-inner">
-        <div class="th-row1">
-          <div class="th-swatch" style="background:${o.color}"></div>
-          <span class="th-name">${o.name}</span>
-        </div>
-        <div class="th-row2">
-          <span class="th-wt">${ortWtStr}</span>
-        </div>
+        <div class="th-swatch" style="background:${o.color}"></div>
+        <span class="th-name">${o.name}</span>
+        <span class="th-wt">${ortWtStr}</span>
       </div>
       <div class="col-resizer" onmousedown="startResize(event,this)"></div>
     </th>`;
   }).join('');
   thead.innerHTML=`<tr>
-    <th class="col-item" style="position:relative;text-align:left;min-width:120px">
-      <div class="th-inner">
-        <div class="th-row1"><span class="th-name" style="font-size:.68rem">Gegenstand</span></div>
-        <div class="th-row2"><span class="th-wt" style="color:var(--tx3)">Artikel</span></div>
-      </div>
+    <th style="position:relative;text-align:left;min-width:120px">
+      <div class="th-inner" style="align-items:flex-start"><span class="th-name" style="font-size:.68rem">Gegenstand</span></div>
       <div class="col-resizer" onmousedown="startResize(event,this)"></div>
     </th>
     <th style="position:relative;min-width:44px">
-      <div class="th-inner">
-        <div class="th-row1"><span class="th-name" style="font-size:.63rem">Prio</span></div>
-        <div class="th-row2"><span class="th-wt">MH/OP</span></div>
-      </div>
+      <div class="th-inner"><span class="th-name" style="font-size:.63rem">Prio</span></div>
       <div class="col-resizer" onmousedown="startResize(event,this)"></div>
     </th>
     <th style="position:relative;min-width:60px">
-      <div class="th-inner">
-        <div class="th-row1"><span class="th-name" style="font-size:.63rem">Gewicht</span></div>
-        <div class="th-row2"><span class="th-wt">Gramm</span></div>
-      </div>
+      <div class="th-inner"><span class="th-name" style="font-size:.63rem">Gewicht</span></div>
       <div class="col-resizer" onmousedown="startResize(event,this)"></div>
     </th>
     ${ortCols}
@@ -989,12 +971,8 @@ function renderPLView(){
       const assignedOrtId=curPL.assignments[it.id]||null;
       const ortDots=orte.map(o=>{
         const isMe=assignedOrtId===o.id;
-        const label=isMe?'✓ zugewiesen':'';
         return `<td class="ort-cell" onclick="toggleAssign('${it.id}','${o.id}')">
-          <div class="ort-cell-inner">
-            <div class="ort-dot ${isMe?'assigned':'unassigned'}" style="${isMe?'background:'+o.color+';':''}">${isMe?'✓':''}</div>
-            <span class="ort-label${isMe?' has-val':''}">${isMe?'✓ hier':'&nbsp;'}</span>
-          </div>
+          <div class="ort-dot ${isMe?'assigned':'unassigned'}" style="${isMe?'background:'+o.color+';':''}">${isMe?'✓':''}</div>
         </td>`;
       }).join('');
       rows+=`<tr>
