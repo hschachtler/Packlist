@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Version 1.0.5 -->
+<!-- Version 1.1.0 -->
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -269,9 +269,64 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 #print-hdr{display:none;margin-bottom:4mm;font-family:'Playfair Display',serif}
 #print-hdr h2{font-size:12pt;color:#1a2b3c}
 #print-hdr p{font-size:7pt;color:#5a7a9a;margin-top:1pt}
+
+/* ═══ PIN OVERLAY ═══ */
+#pin-overlay{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:env(safe-area-inset-top,16px) env(safe-area-inset-right,16px) env(safe-area-inset-bottom,16px) env(safe-area-inset-left,16px);
+}
+#pin-overlay.hidden{display:none}
+.pin-logo{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--tx);margin-bottom:6px}
+.pin-logo span{color:var(--o1)}
+.pin-sub{font-size:.72rem;color:var(--tx3);margin-bottom:32px}
+.pin-dots{display:flex;gap:12px;margin-bottom:28px}
+.pin-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--bd2);background:transparent;transition:all .15s}
+.pin-dot.filled{background:var(--g1);border-color:var(--g1)}
+.pin-dot.error{background:var(--dn);border-color:var(--dn)}
+.pin-grid{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
+.pin-key{width:72px;height:56px;border:1.5px solid var(--bd2);border-radius:14px;background:var(--surface);color:var(--tx);font-family:'DM Sans',sans-serif;font-size:1.2rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;-webkit-appearance:none;box-shadow:var(--sh)}
+.pin-key:active{transform:scale(.92);background:var(--s2)}
+.pin-key.del{font-size:.95rem;color:var(--tx2)}
+.pin-key.empty{border-color:transparent;background:none;box-shadow:none;pointer-events:none}
+.pin-err{font-size:.7rem;color:var(--dn);height:1.1rem;text-align:center;margin-top:4px}
+.pin-setup-hint{font-size:.67rem;color:var(--tx3);margin-top:20px;text-align:center;line-height:1.6}
 </style>
 </head>
-<body data-version="1.0.5">
+<body data-version="1.1.0">
+
+<!-- ═══ PIN OVERLAY ═══ -->
+<div id="pin-overlay">
+  <div class="pin-logo">🎒 Pack<span>Organizer</span></div>
+  <div class="pin-sub" id="pin-sub-text">PIN eingeben</div>
+  <div class="pin-dots" id="pin-dots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+    <div class="pin-dot" id="pd4"></div>
+    <div class="pin-dot" id="pd5"></div>
+  </div>
+  <div class="pin-grid">
+    <button class="pin-key" onclick="pinKey('1')">1</button>
+    <button class="pin-key" onclick="pinKey('2')">2</button>
+    <button class="pin-key" onclick="pinKey('3')">3</button>
+    <button class="pin-key" onclick="pinKey('4')">4</button>
+    <button class="pin-key" onclick="pinKey('5')">5</button>
+    <button class="pin-key" onclick="pinKey('6')">6</button>
+    <button class="pin-key" onclick="pinKey('7')">7</button>
+    <button class="pin-key" onclick="pinKey('8')">8</button>
+    <button class="pin-key" onclick="pinKey('9')">9</button>
+    <button class="pin-key empty"></button>
+    <button class="pin-key" onclick="pinKey('0')">0</button>
+    <button class="pin-key del" onclick="pinDel()">⌫</button>
+  </div>
+  <div class="pin-err" id="pin-err"></div>
+  <div class="pin-setup-hint" id="pin-setup-hint" style="display:none">
+    Kein PIN gesetzt.<br>Wähle einen 6-stelligen PIN.
+  </div>
+</div>
 
 <!-- TOPBAR -->
 <div id="topbar">
@@ -281,6 +336,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
     <button class="tbtn bgh" onclick="openM('m-gh-token')" id="gh-status" title="GitHub Verbindung">🔑 Kein Token</button>
     <button class="tbtn bg" onclick="exportJSON()" title="Daten als packorganizer_data.json speichern">💾 Export</button>
     <button class="tbtn bo" onclick="openM('m-import')">📂 Laden</button>
+    <button class="tbtn bgh" onclick="openPinChange()" title="PIN ändern">🔒</button>
   </div>
 </div>
 
@@ -559,6 +615,37 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
     </div>
   </div>
 </div>
+
+<!-- PIN ÄNDERN MODAL -->
+<div class="moverlay" id="m-pin">
+  <div class="mbox">
+    <div class="mhdr" style="background:linear-gradient(135deg,var(--g1),var(--g2))">
+      <span class="mhdr-t">🔒 PIN verwalten</span>
+      <button class="mcls" onclick="closeM('m-pin')">✕</button>
+    </div>
+    <div class="mbody">
+      <div id="pin-change-cur-wrap">
+        <label class="flbl">Aktueller PIN</label>
+        <input class="fi" id="pin-cur" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" style="letter-spacing:.3em;font-size:1.1rem;text-align:center">
+      </div>
+      <div>
+        <label class="flbl">Neuer PIN (6 Stellen)</label>
+        <input class="fi" id="pin-new" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" style="letter-spacing:.3em;font-size:1.1rem;text-align:center">
+      </div>
+      <div>
+        <label class="flbl">Neuen PIN bestätigen</label>
+        <input class="fi" id="pin-confirm" type="password" inputmode="numeric" maxlength="6" placeholder="••••••" style="letter-spacing:.3em;font-size:1.1rem;text-align:center">
+      </div>
+      <div id="pin-modal-err" style="font-size:.7rem;color:var(--dn);min-height:1rem"></div>
+      <div class="frow2">
+        <button class="fcancel" onclick="closeM('m-pin')">Abbrechen</button>
+        <button class="fsave" onclick="savePinChange()">💾 PIN speichern</button>
+      </div>
+      <button class="fdanger" id="pin-del-btn" onclick="deletePIN()">🗑️ PIN entfernen</button>
+    </div>
+  </div>
+</div>
+
 
 <div id="toast"></div>
 
@@ -1466,6 +1553,137 @@ function copyPL(id){
   toast('Kopie erstellt – noch nicht gespeichert','ok');
 }
 
+// ══════════════════════════════════
+// PIN PROTECTION
+// ══════════════════════════════════
+const PIN_KEY = 'po4_pin';          // localStorage – PIN hash
+const PIN_SESSION = 'po4_unlocked'; // sessionStorage – unlocked flag
+
+let pinBuffer = '';
+let pinMode = 'unlock'; // 'unlock' | 'setup'
+
+function pinHash(pin) {
+  // Simple repeatable hash (not cryptographic, but fine for local protection)
+  let h = 0;
+  for (let i = 0; i < pin.length; i++) {
+    h = Math.imul(31, h) + pin.charCodeAt(i) | 0;
+  }
+  return h.toString(36) + pin.length;
+}
+
+function getPINHash() { return localStorage.getItem(PIN_KEY); }
+function setPINHash(pin) { localStorage.setItem(PIN_KEY, pinHash(pin)); }
+function clearPINHash() { localStorage.removeItem(PIN_KEY); }
+
+function checkPinOnLoad() {
+  // Already unlocked this session?
+  if (sessionStorage.getItem(PIN_SESSION) === '1') {
+    document.getElementById('pin-overlay').classList.add('hidden');
+    return;
+  }
+  const stored = getPINHash();
+  if (!stored) {
+    // No PIN set → show setup mode
+    pinMode = 'setup';
+    document.getElementById('pin-sub-text').textContent = 'Neuen PIN festlegen';
+    document.getElementById('pin-setup-hint').style.display = 'block';
+  } else {
+    pinMode = 'unlock';
+    document.getElementById('pin-sub-text').textContent = 'PIN eingeben';
+    document.getElementById('pin-setup-hint').style.display = 'none';
+  }
+  updatePinDots();
+}
+
+function pinKey(d) {
+  if (pinBuffer.length >= 6) return;
+  pinBuffer += d;
+  updatePinDots();
+  if (pinBuffer.length === 6) {
+    setTimeout(() => handlePinComplete(), 100);
+  }
+}
+
+function pinDel() {
+  pinBuffer = pinBuffer.slice(0, -1);
+  document.getElementById('pin-err').textContent = '';
+  updatePinDots();
+}
+
+function updatePinDots(state) {
+  for (let i = 0; i < 6; i++) {
+    const dot = document.getElementById('pd' + i);
+    dot.className = 'pin-dot';
+    if (state === 'error') dot.classList.add('error');
+    else if (i < pinBuffer.length) dot.classList.add('filled');
+  }
+}
+
+function handlePinComplete() {
+  const stored = getPINHash();
+  if (pinMode === 'unlock') {
+    if (pinHash(pinBuffer) === stored) {
+      sessionStorage.setItem(PIN_SESSION, '1');
+      document.getElementById('pin-overlay').classList.add('hidden');
+    } else {
+      updatePinDots('error');
+      document.getElementById('pin-err').textContent = 'Falscher PIN';
+      setTimeout(() => { pinBuffer = ''; updatePinDots(); document.getElementById('pin-err').textContent = ''; }, 900);
+    }
+  } else if (pinMode === 'setup') {
+    // First entry → store as new PIN
+    setPINHash(pinBuffer);
+    sessionStorage.setItem(PIN_SESSION, '1');
+    document.getElementById('pin-overlay').classList.add('hidden');
+    toast('🔒 PIN gesetzt', 'ok');
+  }
+}
+
+// ── PIN Change Modal ──────────────────────────────────────
+function openPinChange() {
+  const hasPIN = !!getPINHash();
+  document.getElementById('pin-change-cur-wrap').style.display = hasPIN ? 'block' : 'none';
+  document.getElementById('pin-del-btn').style.display = hasPIN ? 'block' : 'none';
+  document.getElementById('pin-cur').value = '';
+  document.getElementById('pin-new').value = '';
+  document.getElementById('pin-confirm').value = '';
+  document.getElementById('pin-modal-err').textContent = '';
+  openM('m-pin');
+}
+
+function savePinChange() {
+  const hasPIN = !!getPINHash();
+  const cur = document.getElementById('pin-cur').value.trim();
+  const nw  = document.getElementById('pin-new').value.trim();
+  const cf  = document.getElementById('pin-confirm').value.trim();
+  const errEl = document.getElementById('pin-modal-err');
+
+  if (hasPIN && pinHash(cur) !== getPINHash()) {
+    errEl.textContent = '❌ Aktueller PIN falsch'; return;
+  }
+  if (!/^\d{6}$/.test(nw)) {
+    errEl.textContent = '❌ PIN muss genau 6 Ziffern haben'; return;
+  }
+  if (nw !== cf) {
+    errEl.textContent = '❌ PINs stimmen nicht überein'; return;
+  }
+  setPINHash(nw);
+  closeM('m-pin');
+  toast('🔒 PIN aktualisiert', 'ok');
+}
+
+function deletePIN() {
+  const cur = document.getElementById('pin-cur').value.trim();
+  if (pinHash(cur) !== getPINHash()) {
+    document.getElementById('pin-modal-err').textContent = '❌ Aktueller PIN falsch'; return;
+  }
+  clearPINHash();
+  closeM('m-pin');
+  toast('🔓 PIN entfernt', 'ok');
+}
+
+
+checkPinOnLoad();
 init();
 </script>
 </body>
