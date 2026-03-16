@@ -447,6 +447,13 @@
       "category": "Fahrrad & Reparatur",
       "prio": "MH",
       "weight": 20
+    },
+    {
+      "id": "qfayjf0wmmommszuazt",
+      "name": "Plastiktaschen Klein (für Füsse in Schuhen)",
+      "category": "Fahrrad & Reparatur",
+      "prio": "MH",
+      "weight": 0
     }
   ],
   "categories": [
