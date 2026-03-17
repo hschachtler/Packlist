@@ -248,31 +248,34 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 @media(max-width:640px){.admin-grid{grid-template-columns:1fr}}
 
 /* ═══════════ PRINT STYLES ═══════════ */
+#static-print{display:none}
 @media print{
-  @page{size:A4 landscape;margin:8mm 10mm}
-  html,body{height:auto;overflow:visible;background:#fff!important;color:#000!important}
-  #topbar,#pstrip,#tab-nav,.pack-toolbar,.pack-stat-bar,#pl-strip,#toast,.moverlay{display:none!important}
-  .view{display:none!important}
-  #view-packlist{display:block!important;overflow:visible!important;flex:none!important}
-  .pack-table-wrap{overflow:visible!important;padding:0!important;flex:none!important}
-  .ptable{font-size:7pt;width:100%;table-layout:auto!important}
-  .ptable th,.ptable td{border:0.5pt solid #ccc;padding:2pt 4pt}
-  .ptable th .th-inner{padding:3pt 4pt}
-  .th-name{font-size:7pt}
-  .th-wt,.td-cat,.td-wt,.ac-sub{font-size:6pt}
-  .td-item{font-size:7pt}
-  .ort-dot.assigned{width:14px;height:14px;font-size:8pt;border-radius:3px}
-  .ort-dot.unassigned{display:none}
-  .wt-row td{background:#f0f0f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .cat-row td{background:#e0e0e0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .ptable tr:nth-child(even) td{background:#fafafa!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .ort-dot.assigned{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .th-swatch{display:block;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  #print-hdr{display:block!important}
+  @page{size:A4 landscape;margin:5mm 6mm}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  html,body{height:auto!important;overflow:visible!important;background:#fff!important;color:#000!important}
+  /* Hide everything except the static print layout */
+  #topbar,#pstrip,#tab-nav,#view-projects,#view-admin,#view-packlist,#toast,.moverlay,#pin-overlay{display:none!important}
+  #static-print{display:block!important}
 }
-#print-hdr{display:none;margin-bottom:4mm;font-family:'Playfair Display',serif}
-#print-hdr h2{font-size:12pt;color:#1a2b3c}
-#print-hdr p{font-size:7pt;color:#5a7a9a;margin-top:1pt}
+/* ── Static Print Layout ── */
+#static-print{font-family:'DM Sans',Arial,sans-serif;background:#fff;color:#111}
+.spl-title{font-family:'Playfair Display',serif;font-size:10pt;font-weight:700;color:#1a2b3c;margin-bottom:1mm}
+.spl-sub{font-size:6pt;color:#5a7a9a;margin-bottom:2.5mm}
+.spl-legend{font-size:6pt;color:#666;margin-bottom:2.5mm}
+.spl-legend span{display:inline-block;margin-right:6mm}
+.spl-legend .mh-dot{display:inline-block;width:7px;height:7px;border-radius:2px;background:#1a6b4a;vertical-align:middle;margin-right:2px}
+.spl-legend .op-dot{display:inline-block;width:7px;height:7px;border-radius:2px;background:#c85a0a;vertical-align:middle;margin-right:2px}
+.spl-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2mm;align-items:start}
+.spl-col{border:0.5pt solid #ccc;border-radius:2px;overflow:hidden;break-inside:avoid}
+.spl-cat-hdr{padding:2.5pt 4pt;font-family:'Playfair Display',serif;font-size:7pt;font-weight:700;border-bottom:0.5pt solid rgba(0,0,0,0.15)}
+.spl-subcat-hdr{padding:2pt 4pt;font-size:6pt;font-weight:700;border-top:0.5pt solid rgba(0,0,0,0.12);border-bottom:0.5pt solid rgba(0,0,0,0.12);margin-top:1px}
+.spl-item{display:flex;align-items:center;gap:3pt;padding:1.5pt 4pt;font-size:6pt;line-height:1.35}
+.spl-item:nth-child(even){background:rgba(0,0,0,0.025)}
+.spl-cb{width:7pt;height:7pt;border:0.7pt solid #888;border-radius:1.5px;flex-shrink:0}
+.spl-name{flex:1;color:#1a2b3c}
+.spl-prio{flex-shrink:0;font-size:5pt;font-weight:700;padding:0.5pt 3pt;border-radius:3px;border:0.5pt solid}
+.spl-mh{background:#d4f0e0;color:#1a6a3a;border-color:#9ad8b0}
+.spl-op{background:#fff4e8;color:#a04010;border-color:#f0c090}
 
 
 /* ═══ COLUMN DRAG & DROP ═══ */
@@ -1832,5 +1835,175 @@ function adminResizeStart(e, resizerIdx) {
 checkPinOnLoad();
 init();
 </script>
+
+<!-- ═══ STATISCHER PRINT-BEREICH (A4 Quer, 5 Spalten) ═══ -->
+<div id="static-print">
+  <div class="spl-title">🎒 Bikepacking Packliste – Rebstein → Serbien &nbsp;|&nbsp; ~1400 km &nbsp;|&nbsp; Juni 2026</div>
+  <div class="spl-legend">
+    <span><span class="mh-dot"></span>MH = Must Have</span>
+    <span><span class="op-dot"></span>OP = Optional</span>
+  </div>
+  <div class="spl-grid">
+
+    <!-- ── Spalte 1: Fahrrad & Reparatur ── -->
+    <div class="spl-col">
+      <div class="spl-cat-hdr" style="background:#8EB4D6;color:#2B4E6E">🚲 Fahrrad &amp; Reparatur</div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">2x Vorderradtaschen</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Arschrakette</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Fahrradhelm</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Fahrradschloss</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Flickzeug</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Gaffa-Tape</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Handyhalterung</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Hüfttasche</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Kabelbinder</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Kettenöl</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Kettenschlösser / Quicklinks 3-5x</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Kurze Fahrradhandschuhe</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Lenkertasche</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Luftpumpe (Adapter frz. Ventil)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Multitool</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Packsäcke / Plastiktüten</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Radbrille / Sonnenbrille</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Rahmentasche</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Reifenheber</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Schlauch (Ersatz)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Schlauchtuch / Buff</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Schmutzlappen</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Trinkflasche / Fahrradflasche</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Abspanngurten Fahrrad</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Ersatz-Bremsbeläge</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Kettenschloss</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Mütze</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Rad-Überschuhe / Gamaschen</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Schmierfett</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Warme Fahrradhandschuhe</span><span class="spl-prio spl-op">OP</span></div>
+    </div>
+
+    <!-- ── Spalte 2: Camping & Ausrüstung ── -->
+    <div class="spl-col">
+      <div class="spl-cat-hdr" style="background:#9DC08B;color:#2E5016">⛺ Camping &amp; Ausrüstung</div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Brennstoff / Gas</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Campingbesteck (Löffel+Gabel)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Campinggeschirr (Becher, Schüssel)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Campingkocher / JetBoil</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Feuerzeug</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Geschirrtuch</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Isomatte</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Kocherzubehör</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Kochgeschirr</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Kopfkissen</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Mückenschutzmittel (stark) – Balkan!</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Multitool Dosen-/Taschenmesser</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Paracord (Wäscheleine/Zelten)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Plastiktüten (Sockenschutz)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Schlafsack</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Spülschwamm</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Sturmfeuerzeug</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Zelt / Biwaksack</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Zelt-Heringe &amp; Abspannleinen</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Zeltunterlage / Regenpellerine</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Campingtools (Ringschraube, Karab.)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Pfanne</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Reparatur-Kit Isomatte</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Reparatur-Kit Zelt</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Trinkwasser-Reservebehälter</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Wasserfilter / Aufbereitungstabl.</span><span class="spl-prio spl-op">OP</span></div>
+    </div>
+
+    <!-- ── Spalte 3: Reiseapotheke + Kulturbeutel ── -->
+    <div class="spl-col">
+      <div class="spl-cat-hdr" style="background:#E8A87C;color:#7A3010">💊 Reiseapotheke</div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Antiallergikum</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Blasenpflaster</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Durchfallmittel (Kohletabletten)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Elektrolytpulver</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Erste-Hilfe-Set (Pflaster, Verband)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Insektenschutz</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Magnesium-Tabletten</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Medikamente je nach Bedarf</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Schmerzmittel</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Sonnencreme LSF 50+</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Tape</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Wund- und Heilsalbe (Arschcreme)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Wundspray</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Zeckenkarte / Zeckenzange</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Betadine-Salbe</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Schnupfenspray</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Zahnseide</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-subcat-hdr" style="background:#85C1D4;color:#1A4F62">🧴 Kulturbeutel &amp; Hygiene</div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Feuchttücher / WC Papier</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Haarbürste / mit Spiegel</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Nivea</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Reisehandtuch</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Seife / Shampoo</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Zahnbürste + Zahnpasta</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Nagelschere, Pinzette, Nagelfeile</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Rasierer</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Taschentücher</span><span class="spl-prio spl-op">OP</span></div>
+    </div>
+
+    <!-- ── Spalte 4: Technik + Papiere ── -->
+    <div class="spl-col">
+      <div class="spl-cat-hdr" style="background:#9BB0D4;color:#2C3E6B">📱 Technik &amp; Orientierung</div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Fahrradlicht (vorne + hinten)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Fahrradcomputer</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Handy</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Ladeadapter Fahrradakku</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Ladekabel für alle Geräte</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Offline-Karten Komoot</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Powerbank / Solarpanel</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Steckdosenadapter (ggf.)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Stirnlampe</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Kopfhörer</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Satelliten-/GPS-Gerät (ggf.)</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-subcat-hdr" style="background:#D4C87A;color:#4E3C00">📄 Papiere &amp; Sonstiges</div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Ausweis / Reisepass</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Bargeld / EC-Karte / Kreditkarte</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Dokumenten-Kopien (digital+Papier)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Notfallnummern (Versicherung etc.)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Plastik-Zip-Beutel (Brotzeit)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Reiseversicherung mit Rückholung</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Kleiner Rucksack / Daypack</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Krankenversicherungskarte</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Ohrstöpsel</span><span class="spl-prio spl-op">OP</span></div>
+    </div>
+
+    <!-- ── Spalte 5: Verpflegung + Bekleidung ── -->
+    <div class="spl-col">
+      <div class="spl-cat-hdr" style="background:#C4A8D4;color:#4A2060">🍫 Verpflegung</div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Energieriegel / Snacks</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Instant-Mahlzeiten (2-3 Stück Backup)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Traubenzucker</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-subcat-hdr" style="background:#D4A87C;color:#5A2800">👕 Bekleidung</div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Armlinge (leicht)</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Fahrrad-Regenpellerine</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Fahrradsocken</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Kurze Fahrradhose / Radshorts</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Lange Freizeithose</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Longsleeve / Funktionsshirt</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Radhose mit Polster</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Rad-T-Shirt</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Socken</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Sonnenschutz-Langarmshirt</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">T-Shirt</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Unterhosen</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Windweste / Windjacke</span><span class="spl-prio spl-mh">MH</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Badehose</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Beinlinge</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Fahrrad-Regenhose</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Fleecejacke</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Fleecepullover (leicht)</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Isolationsjacke</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Lange Radhose (alternativ)</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Leggings oder Beinlinge</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Leichte Freizeitschuhe</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Sandalen / Flip-Flops</span><span class="spl-prio spl-op">OP</span></div>
+      <div class="spl-item"><span class="spl-cb"></span><span class="spl-name">Wasserschuhe</span><span class="spl-prio spl-op">OP</span></div>
+    </div>
+
+  </div><!-- /.spl-grid -->
+</div><!-- /#static-print -->
+
 </body>
 </html>
