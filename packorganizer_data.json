@@ -454,6 +454,13 @@
       "category": "Fahrrad & Reparatur",
       "prio": "MH",
       "weight": 0
+    },
+    {
+      "id": "4rqrjidmo8hmmvmjma9",
+      "name": "Zeckenschutz",
+      "category": "Reiseapotheke",
+      "prio": "OP",
+      "weight": 200
     }
   ],
   "categories": [
